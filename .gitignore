@@ -13,5 +13,7 @@ rust-project.json
 *.o
 public/
 
+commit.sh
+
 # Local Netlify folder
 .netlify
