@@ -2,7 +2,6 @@
 	queue
 	This question requires you to use queues to implement the functionality of the stac
 */
-// I AM NOT DONE
 
 #[derive(Debug)]
 pub struct Queue<T> {
@@ -56,26 +55,65 @@ pub struct myStack<T>
 {
 	//TODO
 	q1:Queue<T>,
-	q2:Queue<T>
+	q2:Queue<T>,
+    q1_flag: bool,
 }
-impl<T> myStack<T> {
+impl<T> myStack< T> {
     pub fn new() -> Self {
         Self {
 			//TODO
 			q1:Queue::<T>::new(),
-			q2:Queue::<T>::new()
+			q2:Queue::<T>::new(),
+            q1_flag: true,
+        }
+    }
+
+    pub fn get(&mut self) -> (&mut Queue<T>,&mut Queue<T>) {
+        let flag = self.q1_flag.clone(); 
+        if flag {
+            (&mut self.q1,&mut self.q2)
+        } else {
+            (&mut self.q2,&mut self.q1)
         }
     }
     pub fn push(&mut self, elem: T) {
+        
+        // let (q1,_) = self.get();
+        // (q1).enqueue(elem);
+        if self.q1_flag {
+            self.q1.enqueue(elem);
+        } else {
+            self.q2.enqueue(elem);
+        }
+
         //TODO
     }
     pub fn pop(&mut self) -> Result<T, &str> {
         //TODO
-		Err("Stack is empty")
+        
+        let (q1,q2) = if self.q1_flag {
+            (&mut self.q1,&mut self.q2)
+        } else {
+            (&mut self.q2,&mut self.q1)
+        };
+        let mut re:Result<T, &str> = Err("Stack is empty");
+        while let Ok(val) = q1.dequeue(){
+            if q1.is_empty() {
+                re = Ok(val);
+                self.q1_flag = !self.q1_flag;
+            }else {
+                q2.enqueue(val);
+            }
+        }
+        re
     }
     pub fn is_empty(&self) -> bool {
 		//TODO
-        true
+        if self.q1.is_empty() && self.q2.is_empty() {
+            true
+        } else {
+            false
+        }
     }
 }
 

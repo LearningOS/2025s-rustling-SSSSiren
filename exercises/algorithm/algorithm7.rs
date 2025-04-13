@@ -2,8 +2,6 @@
 	stack
 	This question requires you to use a stack to achieve a bracket match
 */
-
-// I AM NOT DONE
 #[derive(Debug)]
 struct Stack<T> {
 	size: usize,
@@ -30,9 +28,13 @@ impl<T> Stack<T> {
 		self.data.push(val);
 		self.size += 1;
 	}
-	fn pop(&mut self) -> Option<T> {
+	fn pop(&mut self) -> Option<T> 
+	where
+		T:Clone,
+	{
 		// TODO
-		None
+		self.size -= 1;
+		self.data.get(self.size).cloned()
 	}
 	fn peek(&self) -> Option<&T> {
 		if 0 == self.size {
@@ -102,7 +104,37 @@ impl<'a, T> Iterator for IterMut<'a, T> {
 fn bracket_match(bracket: &str) -> bool
 {
 	//TODO
-	true
+	
+	let mut st = Iter{stack: Vec::<&char>::new()};
+	let mut flag = true;
+	let bracket_chars: Vec<char> = bracket.chars().collect();
+	for c  in &bracket_chars {
+		match *c  {
+			'(' | '[' | '{' => {st.stack.push(c)},
+			'}' => if let Some(&item) = st.next() {
+				println!("{}",item);
+				if item != '{'{
+					flag = false;break;
+				}
+			} else {flag = false},
+			']' => if let Some(&item) = st.next() {
+				if item != '['{
+					flag = false;break;
+				}
+			}else {flag = false},
+			')' => if let Some(&item) = st.next() {
+				if item != '('{
+					flag = false;break;
+				}
+			}else {flag = false},
+			_ => {},
+		}
+	}
+	if !st.stack.is_empty() {
+		flag = false;
+	}
+	flag
+
 }
 
 #[cfg(test)]

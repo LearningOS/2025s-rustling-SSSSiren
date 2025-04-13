@@ -3,10 +3,54 @@
 	This problem requires you to implement a sorting algorithm
 	you can use bubble sorting, insertion sorting, heap sorting, etc.
 */
-// I AM NOT DONE
 
-fn sort<T>(array: &mut [T]){
+fn merge<T>(array: &mut [T], mid: usize)
+where
+    T: std::cmp::PartialOrd + Clone,
+{
+    let mut tar = vec![];
+    let mut i = 0;
+    let mut j = mid;
+    while i!=mid && j!=array.len() {
+        if array[i] < array[j] {
+            tar.push(array[i].clone());
+            i += 1;
+        } else {
+            tar.push(array[j].clone());
+            j += 1;
+        }
+    }
+     
+    while i!=mid {
+        tar.push(array[i].clone());
+        i += 1;
+    }
+
+    while j != array.len() {
+        tar.push(array[j].clone());
+        j += 1;
+    }
+
+    for i in 0..array.len() {
+        array[i] = tar[i].clone();
+    }
+}
+
+fn sort<T>(array: &mut [T])
+where
+    T: std::cmp::PartialOrd + Clone,
+{
 	//TODO
+    let length = array.len();
+    if length > 1 {
+        let mid = length / 2 as usize;
+        sort(&mut array[0..mid]);
+        sort(&mut array[mid..]);
+        merge(array, mid);
+    }
+    
+
+
 }
 #[cfg(test)]
 mod tests {

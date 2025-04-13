@@ -2,7 +2,6 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
@@ -70,13 +69,45 @@ impl<T> LinkedList<T> {
         }
     }
 	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
+    where
+        T: std::cmp::PartialOrd + Clone,
 	{
 		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+		// Self {
+        //     length: 0,
+        //     start: None,
+        //     end: None,
+        // };
+
+        let mut temp = LinkedList::new();
+        let mut  a = list_a.start;
+        let mut  b = list_b.start;
+
+        while a.is_some() && b.is_some() {
+            let node_a = unsafe {a.unwrap().as_ref()};
+            let node_b = unsafe {b.unwrap().as_ref()};
+
+            if node_a.val < node_b.val {
+                temp.add(node_a.val.clone());
+                a = unsafe { node_a.next};
+            } else {
+                temp.add(node_b.val.clone());
+                b = unsafe { node_b.next};
+            }
         }
+
+        while a.is_some() {
+            let node_a = unsafe {a.unwrap().as_ref()};
+            temp.add(node_a.val.clone());
+            a = unsafe { node_a.next};
+        }
+
+        while b.is_some() {
+            let node_b = unsafe {b.unwrap().as_ref()};
+            temp.add(node_b.val.clone());
+            b = unsafe { node_b.next};
+        }
+        temp
 	}
 }
 

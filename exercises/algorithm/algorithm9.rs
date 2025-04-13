@@ -2,7 +2,6 @@
 	heap
 	This question requires you to implement a binary heap function
 */
-// I AM NOT DONE
 
 use std::cmp::Ord;
 use std::default::Default;
@@ -36,8 +35,38 @@ where
         self.len() == 0
     }
 
+    pub fn heap_sort(&mut self)
+    {
+        if self.len() < 2 { return; }
+        for i in (1..=self.len()/2).rev() {
+            self.move_down(i);
+        }
+        // for j in 1..=self.len() {
+        //     println!("{}:{}",j, self.items[j]);
+        // }
+    }
+
+    pub fn move_down(&mut self, parent_idx: usize) {
+        if self.children_present(parent_idx) {
+            let left_idx = self.left_child_idx(parent_idx);
+            let right_idx = self.right_child_idx(parent_idx);
+            if (self.comparator)(&self.items[left_idx], &self.items[parent_idx]) {
+                self.items.swap(left_idx, parent_idx);
+                self.move_down(left_idx);
+            }
+            if right_idx <= self.len() && (self.comparator)(&self.items[right_idx], &self.items[parent_idx]) {
+                self.items.swap(right_idx, parent_idx);
+                self.move_down(right_idx);
+            }
+        }
+    }
+
     pub fn add(&mut self, value: T) {
         //TODO
+        // empty
+        self.count += 1;
+        self.items.push(value);
+        self.heap_sort();
     }
 
     fn parent_idx(&self, idx: usize) -> usize {
@@ -85,7 +114,14 @@ where
 
     fn next(&mut self) -> Option<T> {
         //TODO
-		None
+		if self.count != 0 {
+            self.items.swap(1,self.count);
+            self.count -= 1;
+            self.heap_sort();
+            self.items.pop()
+        } else {
+            None
+        }
     }
 }
 
